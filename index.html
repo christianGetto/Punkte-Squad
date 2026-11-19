@@ -1,0 +1,170 @@
+<!doctype html><html lang="de"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex"><title>Squad Mode · XP-Station</title><style>
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at top,#253b6b,#0c142b 70%);color:#f4f7ff;font:1rem/1.45 system-ui,sans-serif;min-height:100vh}main{max-width:940px;margin:auto;padding:18px clamp(14px,4vw,46px) 60px}header{border-radius:18px;border:3px solid #07142c;background:#90ceff;overflow:hidden;text-align:center;box-shadow:0 5px 0 #050b19}header img{display:block;width:min(100%,540px);margin:auto}h1,h2,p{margin:.45em 0}h1,h2{font-weight:950;letter-spacing:-.035em}h1{font-size:clamp(26px,4vw,40px)}.bar{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:20px}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}button,textarea{font:inherit}button{cursor:pointer;touch-action:manipulation}button:focus-visible,summary:focus-visible{outline:4px solid cyan;outline-offset:3px}.team{background:var(--t);border:3px solid #fff;border-radius:16px;overflow:hidden;color:#fff;padding:0;box-shadow:0 5px 0 #050913;text-shadow:0 2px 2px #101020}.team img{display:block;width:100%;height:clamp(85px,13vw,135px);object-fit:cover;object-position:50% 37%}.team b{display:block;font-size:1.1rem;padding:6px}.team[aria-pressed=true],.points button[aria-pressed=true]{outline:4px solid #ffdf42;outline-offset:2px}.small{background:#202f51;border:1px solid #8c9cb8;color:white;padding:8px 13px;border-radius:20px}.panel{background:#f5f7ff;color:#111c36;border:3px solid #10172c;border-radius:20px;padding:clamp(17px,3vw,29px);margin-top:23px;box-shadow:0 5px 0 #060b17}.points{display:flex;gap:12px;margin:14px 0 19px}.points button,.go{font-weight:900;border-radius:12px;border:2px solid #131931;box-shadow:0 4px 0 #131931}.points button{flex:1;background:#253960;color:white;padding:12px 2px;font-size:1.35rem}.points button[aria-pressed=true]{background:#173155;color:#ffe248}textarea{width:100%;margin:6px 0 10px;padding:12px;border-radius:10px;border:1px solid #7785a0;resize:vertical}.go{background:#ffd24b;color:#191627;padding:13px;width:100%}label,summary{font-weight:800}summary{cursor:pointer}#message{font-weight:750;color:#02524d}.boom{animation:pop .45s ease-out}@keyframes pop{30%{transform:scale(1.045);color:#aa4400}}@media(prefers-reduced-motion:reduce){.boom{animation:none}}footer{font-size:.9rem;color:#c2d2ea;margin-top:16px}.item{border-bottom:1px solid #c7d0e0;padding:8px 0;overflow-wrap:anywhere}@media(max-width:560px){.grid{grid-template-columns:repeat(2,1fr);gap:12px}.team b{font-size:1rem}}
+.xp-spark{position:fixed;pointer-events:none;z-index:9;font-size:25px;font-weight:1000;line-height:1;filter:drop-shadow(0 2px 1px #482600)}.gold-ring{width:24px;height:24px;border-radius:50%;border:5px solid #ffcf24;box-shadow:inset 1px 1px #fff2a6,0 0 5px #ffad00}dialog{border:3px solid #172443;border-radius:18px;padding:22px;color:#141d32;width:min(390px,92vw);max-height:85vh;overflow:auto}dialog::backdrop{background:#080f25bc}dialog strong{display:block;color:#233568;font-size:1.25rem}dialog blockquote{margin:10px 0 20px;padding:12px;background:#eff3fb;border-radius:8px;overflow-wrap:anywhere;white-space:pre-wrap}dialog button{margin:4px 0}dialog .small{width:100%}</style><main><header><img src="logo.webp" alt="Squad Mode"></header><div class="bar"><h1>Wähle deinen Squad</h1><button class="small" id="sound" aria-pressed="true">Ton an</button></div><section class="grid" id="teams" aria-label="Squad auswählen"></section><form class="panel" id="form" hidden><h2 id="title"></h2><p>Wie viele XP hat euch die Lehrkraft gegeben?</p><div class="points" id="points"></div><label for="why">Wofür habt ihr die Punkte bekommen?</label><textarea id="why" required maxlength="240" rows="2" placeholder="Zum Beispiel: Wir haben einem anderen Squad geholfen."></textarea><button class="go">XP eintragen</button><div id="message" role="status"></div></form><details class="panel" id="review"><summary>Squad Check · Lehrerbereich</summary><form id="unlock"><p><label for="pw">Lehrerpasswort</label></p><input id="pw" type="password" required autocomplete="off" style="font:inherit;padding:10px;width:100%;margin-bottom:10px"><button class="go">Übersicht öffnen</button><p id="authmsg" role="status"></p></form><section id="teacherdata" hidden><button type="button" class="small" id="lock">Wieder sperren</button><p><label for="seasonView">Season ansehen</label> <select id="seasonView"></select></p><div id="totals"></div><h3>Einträge</h3><div id="history"></div><p><button class="small" id="reset" type="button">Reset · Neue Season starten</button></p></section></details><footer>Testversion · Punkte und Gründe bleiben in diesem Browser auf diesem Gerät.</footer></main><dialog id="adjust" aria-labelledby="adjustTitle"><form id="adjustForm"><h2 id="adjustTitle">Buchung korrigieren</h2><strong id="adjustSummary"></strong><p id="adjustOriginal"></p><label for="adjustXP">Wie viele XP sollen für diesen Eintrag zählen?</label><p><select id="adjustXP" required></select></p><label for="adjustReason">Grund der Korrektur</label><textarea id="adjustReason" required maxlength="240" placeholder="Zum Beispiel: doppelt eingetragen"></textarea><p id="adjustMsg" role="status"></p><button class="small" id="adjustCancel" type="button">Abbrechen</button><button class="go" id="adjustSave">Korrektur speichern</button></form></dialog><dialog id="seasonDialog" aria-labelledby="seasonHeading"><h2 id="seasonHeading"></h2><p id="seasonPrompt"></p><button class="small" type="button" id="cancelReset" autofocus>Abbrechen</button><button class="go" type="button" id="nextReset"></button></dialog><dialog id="check" aria-labelledby="checktitle"><h2 id="checktitle">Stimmt dein Eintrag?</h2><p>Kontrolliere bitte noch einmal Squad, Punkte und Grund.</p><strong id="checkscore"></strong><blockquote id="checkreason"></blockquote><button type="button" id="edit" class="small" autofocus>Noch mal bearbeiten</button><button type="button" id="send" class="go">Jetzt absenden</button></dialog><script src="teacher-key.js"></script><script src="vault.js"></script><script src="effects.js"></script><script>
+const names=['Mario','Link','Pikachu','Fortnite','Sonic','Minecraft'],colors=['#aa1936','#16743e','#996300','#7934a7','#185ab0','#117266'];
+const el=id=>document.getElementById(id), prefix='squadmode.s1.xp.';
+let squad=-1,xp=0,audio,enabled=true;
+function buttons(group,chosen){[...group.children].forEach((b,i)=>b.setAttribute('aria-pressed',String(i===chosen)))}
+function clearAward(){xp=0;buttons(el('points'),-1);el('why').value='';el('message').textContent=''}
+names.forEach((n,i)=>{const b=document.createElement('button');b.className='team';b.style.setProperty('--t',colors[i]);b.setAttribute('aria-pressed','false');b.innerHTML='<img alt="" src="team'+i+'.webp"><b>'+n+' Squad</b>';b.onclick=()=>{squadCue(i);if(squad!==i)clearAward();squad=i;buttons(el('teams'),i);el('title').textContent=n+' Squad · XP eintragen';el('form').hidden=false;el('form').scrollIntoView({block:'nearest'})};el('teams').append(b)});
+[1,2,3].forEach(n=>{const b=document.createElement('button');b.type='button';b.textContent='+'+n+' XP';b.setAttribute('aria-pressed','false');b.onclick=()=>{squadCue(squad,n);xpBurst(b,squad,n);xp=n;buttons(el('points'),n-1);el('message').textContent=''};el('points').append(b)});
+el('sound').onclick=()=>{enabled=!enabled;el('sound').textContent=enabled?'Ton an':'Ton aus';el('sound').setAttribute('aria-pressed',enabled)};
+function jingle(){if(!enabled)return;try{audio??=new (window.AudioContext||window.webkitAudioContext)();audio.resume().catch(()=>{});[130.81,523.25,659.25,783.99].forEach((hz,i)=>{const o=audio.createOscillator(),g=audio.createGain(),t=audio.currentTime+i*.078;o.type=i?'triangle':'sine';o.frequency.value=hz;g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(.13,t+.014);g.gain.exponentialRampToValueAtTime(.0001,t+.24);o.connect(g);g.connect(audio.destination);o.start(t);o.stop(t+.25)})}catch{}}
+function row(parent,txt){const item=document.createElement('div');item.className='item';item.textContent=txt;parent.append(item)}
+let teacherKey=null,epoch=0;
+const seasonStorage = 'squadmode.s1.season';
+function currentSeason(){ return Number(localStorage.getItem(seasonStorage) || 1); }
+let resetStep=0, resetFrom=0;
+const resetDialog=el('seasonDialog');
+function cancelReset(){resetStep=0;if(resetDialog.open)resetDialog.close();}
+function renderReset(){
+  el('seasonHeading').textContent='Saisonwechsel · '+resetStep+' von 3';
+  el('seasonPrompt').textContent=[
+    'Möchtest du Season '+resetFrom+' auf diesem Gerät abschließen?',
+    'Alle sechs Squads starten in der neuen Season bei 0 XP. Die bisherigen Einträge bleiben im Archiv. Möchtest du fortfahren?',
+    'Letzte Bestätigung: Season '+resetFrom+' jetzt abschließen und Season '+(resetFrom+1)+' starten?'
+  ][resetStep-1];
+  el('nextReset').textContent=['Ja, Season abschließen','Ja, weiter','Ja, neue Season jetzt starten'][resetStep-1];
+  el('cancelReset').focus();
+}
+el('reset').onclick=()=>{
+  if(!teacherKey || resetDialog.open)return;
+  resetFrom=currentSeason(); resetStep=1;resetDialog.showModal();renderReset();
+};
+el('cancelReset').onclick=cancelReset;
+resetDialog.oncancel=()=>{resetStep=0};
+el('nextReset').onclick=()=>{
+  if(!teacherKey || !resetDialog.open || !resetStep)return;
+  if(resetStep<3){resetStep++;renderReset();return;}
+  try{
+    if(currentSeason()===resetFrom)localStorage.setItem(seasonStorage,String(resetFrom+1));
+    el('seasonView').replaceChildren();cancelReset();refresh();
+  }catch{el('seasonPrompt').textContent='Speichern fehlgeschlagen. Bitte versuche es erneut.';}
+};
+el('seasonView').onchange=refresh;
+function lockTeacher(){
+  closeAdjustment();cancelReset();el('seasonView').replaceChildren();
+  epoch++;teacherKey=null;el('teacherdata').hidden=true;el('unlock').hidden=false;
+  el('totals').replaceChildren();el('history').replaceChildren();el('pw').value='';el('authmsg').textContent='';
+}
+const storedKeys=()=>Object.keys(localStorage).filter(k=>k.startsWith(prefix));
+async function migrate(){
+  for(const k of storedKeys()){
+    const raw=localStorage.getItem(k);if(!raw)continue;
+    const entry=JSON.parse(raw);
+    if(!entry.sealed){const packed=await seal(entry);if(localStorage.getItem(k)===raw)localStorage.setItem(k,JSON.stringify(packed));}
+  }
+}
+migrate().catch(()=>{});
+async function refresh(){
+  if(!teacherKey)return;
+  const turn=++epoch;
+  try{
+    await migrate();
+    if(turn!==epoch)return;
+    const allEntries=await Promise.all(storedKeys().map(async key=>{const raw=localStorage.getItem(key); const award=await openAward(JSON.parse(raw),teacherKey);return {...award,key,raw};}));
+    if(turn!==epoch)return;
+    const active=currentSeason(), select=el('seasonView');
+    const selected=Number(select.value)||active;
+    select.replaceChildren();
+    for(let i=active;i>=1;i--){select.add(new Option('Season '+i+(i===active?' · aktuell':' · Archiv'),String(i)));}
+    select.value=String(selected);
+    const entries=allEntries.filter(entry=>(entry.season??1)===selected);
+    const totals=el('totals'),history=el('history');totals.replaceChildren();history.replaceChildren();
+    names.forEach((n,i)=>row(totals,n+' Squad · '+entries.reduce((s,e)=>s+(e.squad===i?e.xp:0),0)+' XP'));
+    for(const entry of entries.sort((a,b)=>b.time-a.time)){
+      const item=document.createElement('div');item.className='item';
+      item.textContent=new Date(entry.time).toLocaleString('de-DE')+' · '+names[entry.squad]+' · '+entry.xp+' XP · '+entry.reason;
+      history.append(item);
+      for(const change of entry.changes||[]){
+        row(item,new Date(change.time).toLocaleString('de-DE')+' · Korrektur von '+change.from+' auf '+change.to+' XP · '+change.reason);
+      }
+      if(selected===active){
+        const button=document.createElement('button');button.className='small';button.textContent='Buchung korrigieren';
+        button.onclick=()=>openAdjustment(entry);item.append(document.createElement('br'),button);
+      }
+    }
+    if(!entries.length)row(history,'Noch keine Punkte eingetragen.');
+  } catch {if(turn===epoch)el('history').textContent='Die Einträge konnten nicht vollständig geladen werden.'}
+}
+let editing=null;
+function closeAdjustment(){
+  editing=null;if(el('adjust').open)el('adjust').close();
+  el('adjustSummary').textContent='';el('adjustOriginal').textContent='';
+  el('adjustReason').value='';el('adjustMsg').textContent='';
+}
+function openAdjustment(entry){
+  if(!teacherKey || (entry.season??1)!==currentSeason())return;
+  editing=entry;
+  el('adjustSummary').textContent=names[entry.squad]+' Squad · bisher '+entry.xp+' XP';
+  el('adjustOriginal').textContent=entry.reason;
+  const select=el('adjustXP');select.replaceChildren();
+  for(let n=0;n<=3;n++)select.add(new Option(n===0?'0 XP · Buchung zurücknehmen':n+' XP',String(n)));
+  select.value=String(entry.xp);el('adjustReason').value='';el('adjustSave').disabled=false;
+  el('adjustMsg').textContent='';el('adjust').showModal();
+}
+el('adjustCancel').onclick=closeAdjustment;
+el('adjust').oncancel=closeAdjustment;
+el('adjustForm').onsubmit=async event=>{
+  event.preventDefault();
+  if(!teacherKey || !editing || el('adjustSave').disabled)return;
+  const entry=editing,session=teacherKey,to=Number(el('adjustXP').value),reason=el('adjustReason').value.trim();
+  if(!Number.isInteger(to)||to<0||to>3||to===entry.xp||!reason){
+    el('adjustMsg').textContent='Bitte ändere die XP und gib einen Grund an.';return;
+  }
+  el('adjustSave').disabled=true;
+  try{
+    const {key,raw,...award}=entry;
+    const change={from:entry.xp,to,reason,time:Date.now()};
+    const updated=await seal({...award,xp:to,changes:[...(award.changes||[]),change]});
+    if(teacherKey!==session||editing!==entry)return;
+    if(localStorage.getItem(key)!==raw||(entry.season??1)!==currentSeason()){
+      el('adjustMsg').textContent='Die Buchung hat sich geändert. Bitte abbrechen und erneut öffnen.';refresh();return;
+    }
+    localStorage.setItem(key,JSON.stringify(updated));closeAdjustment();refresh();
+  }catch{el('adjustMsg').textContent='Speichern fehlgeschlagen. Bitte versuche es erneut.';}
+  finally{if(editing===entry)el('adjustSave').disabled=false;}
+};
+el('unlock').onsubmit=async event=>{
+  event.preventDefault();const turn=++epoch;const password=el('pw').value;el('pw').value='';
+  try{const key=await unlockKey(password);if(turn!==epoch || !el('review').open)return;
+    teacherKey=key;el('unlock').hidden=true;el('teacherdata').hidden=false;refresh();
+  }catch{if(turn===epoch)el('authmsg').textContent='Entsperren fehlgeschlagen. Bitte prüfe dein Passwort.'}
+};
+el('lock').onclick=()=>{lockTeacher();el('review').open=false};
+el('review').ontoggle=()=>{if(!el('review').open)lockTeacher()};
+document.addEventListener('visibilitychange',()=>{if(document.hidden)lockTeacher()});
+window.addEventListener('pagehide',lockTeacher);window.addEventListener('storage',refresh);
+const reviewDialog = el('check');
+let pending = null;
+el('form').onsubmit = event => {
+  event.preventDefault();
+  if (reviewDialog.open) return;
+  const reason = el('why').value.trim(), msg = el('message');
+  if (!xp) { msg.textContent = 'Wähle zuerst die Punkte.'; return; }
+  if (!reason) { msg.textContent = 'Trage bitte einen Grund ein.'; el('why').focus(); return; }
+  pending = {squad, xp, reason, season:currentSeason()};
+  el('checkscore').textContent = names[squad] + ' Squad · +' + xp + ' XP';
+  el('checkreason').textContent = reason;
+  reviewDialog.showModal();
+};
+el('edit').onclick = () => { pending = null; reviewDialog.close(); el('why').focus(); };
+reviewDialog.oncancel = () => { pending = null; };
+el('send').onclick = async () => {
+  if (!pending || !reviewDialog.open) return;
+  const award = pending;
+  pending = null;
+  reviewDialog.close();
+  const msg = el('message');
+  try {
+    const record=await seal({...award,time:Date.now()});
+    if(award.season!==currentSeason()){msg.textContent='Eine neue Season hat begonnen. Bitte prüfe deinen Eintrag erneut.';return;}
+    localStorage.setItem(prefix + crypto.randomUUID(), JSON.stringify(record));
+  }
+  catch { msg.textContent = 'Speichern fehlgeschlagen. Dein Eintrag steht noch im Formular.'; return; }
+  clearAward();
+  msg.textContent = '★ +' + award.xp + ' XP für den ' + names[award.squad] + ' Squad eingetragen!';
+  msg.classList.remove('boom'); void msg.offsetWidth; msg.classList.add('boom');
+  jingle(); refresh();
+};
+</script></html>
